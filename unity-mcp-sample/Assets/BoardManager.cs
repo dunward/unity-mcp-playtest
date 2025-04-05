@@ -45,7 +45,14 @@ public class BoardManager : MonoBehaviour
                 }
                 else
                 {
-                    if (Random.Range(0, 100) < 30)
+                    if ((Random.Range(0, 100) < 30) && 
+                        !(x == 1 && y == 1) &&
+                        !(x == Width - 2 && y == Height - 2))
+                    {
+                        tile = WallTiles[Random.Range(0, WallTiles.Length)];
+                        m_BoardData[x, y].Passable = false;
+                    }
+                    else if (Random.Range(0, 100) < 10)
                     {
                         tile = BlockingTiles[Random.Range(0, BlockingTiles.Length)];
                         m_BoardData[x, y].Passable = false;
@@ -80,5 +87,34 @@ public class BoardManager : MonoBehaviour
         }
 
         return m_BoardData[cellIndex.x, cellIndex.y];
+    }
+
+    public void Log()
+    {
+        int[,] mapData = new int[Height, Width];
+        
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                mapData[y,x] = m_BoardData[x,y].Passable ? 0 : 9;
+            }
+        }
+        
+        Vector2Int playerPos = Player.GetCurrentPosition();
+        mapData[playerPos.y, playerPos.x] = 1;
+        
+        mapData[Height-2,Width-2] = 5;
+
+        string mapString = "";
+        for (int y = Height - 1; y >= 0; y--)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                mapString += mapData[y,x] + " ";
+            }
+            mapString += "\n";
+        }
+        Debug.Log(mapString);
     }
 }

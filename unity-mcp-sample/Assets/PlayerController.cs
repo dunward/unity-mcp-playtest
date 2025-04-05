@@ -6,6 +6,11 @@ public class PlayerController : MonoBehaviour
     private BoardManager m_Board;
     private Vector2Int m_CellPosition;
 
+    public Vector2Int GetCurrentPosition()
+    {
+        return m_CellPosition;
+    }
+
     public void Spawn(BoardManager boardManager, Vector2Int cell)
     {
         m_Board = boardManager;
@@ -53,6 +58,7 @@ public class PlayerController : MonoBehaviour
             if(cellData != null && cellData.Passable)
             {
                 MoveTo(newCellTarget);
+                m_Board.Log();
             }
         }
     }
