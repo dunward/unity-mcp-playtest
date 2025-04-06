@@ -23,43 +23,128 @@ public class PlayerController : MonoBehaviour
         transform.position = m_Board.CellToWorld(m_CellPosition);
     }
 
+    public string MoveUp()
+    {
+        Vector2Int newCellTarget = m_CellPosition;
+        newCellTarget.y += 1;
+
+        BoardManager.CellData cellData = m_Board.GetCellData(newCellTarget);
+        if (cellData != null && cellData.Passable)
+        {
+            MoveTo(newCellTarget);
+            m_Board.Log();
+            if (CheckClear(newCellTarget))
+            {
+                return "Stage Clear";
+            }
+            else
+            {
+                return "Move Up";
+            }
+        }
+        else
+        {
+            return "Invalid Move";
+        }
+    }
+
+    public string MoveDown()
+    {
+        Vector2Int newCellTarget = m_CellPosition;
+        newCellTarget.y -= 1;
+
+        BoardManager.CellData cellData = m_Board.GetCellData(newCellTarget);
+        if (cellData != null && cellData.Passable)
+        {
+            MoveTo(newCellTarget);
+            m_Board.Log();
+            if (CheckClear(newCellTarget))
+            {
+                return "Stage Clear";
+            }
+            else
+            {
+                return "Move Down";
+            }
+        }
+        else
+        {
+            return "Invalid Move";
+        }
+    }
+    public string MoveRight()
+    {
+        Vector2Int newCellTarget = m_CellPosition;
+        newCellTarget.x += 1;
+
+        BoardManager.CellData cellData = m_Board.GetCellData(newCellTarget);
+        if (cellData != null && cellData.Passable)
+        {
+            MoveTo(newCellTarget);
+            m_Board.Log();
+            if (CheckClear(newCellTarget))
+            {
+                return "Stage Clear";
+            }
+            else
+            {
+                return "Move Right";
+            }
+        }
+        else
+        {
+            return "Invalid Move";
+        }
+    }
+
+    public string MoveLeft()
+    {
+        Vector2Int newCellTarget = m_CellPosition;
+        newCellTarget.x -= 1;
+
+        BoardManager.CellData cellData = m_Board.GetCellData(newCellTarget);
+        if (cellData != null && cellData.Passable)
+        {
+            MoveTo(newCellTarget);
+            m_Board.Log();
+            if (CheckClear(newCellTarget))
+            {
+                return "Stage Clear";
+            }
+            else
+            {
+                return "Move Left";
+            }
+        }
+        else
+        {
+            return "Invalid Move";
+        }
+    }
+
+    private bool CheckClear(Vector2Int cell)
+    {
+        return cell == new Vector2Int(6, 6);
+    }
+
     
     private void Update()
     {
-        Vector2Int newCellTarget = m_CellPosition;
-        bool hasMoved = false;
-
-        if(Keyboard.current.upArrowKey.wasPressedThisFrame)
+        if (Keyboard.current.upArrowKey.wasPressedThisFrame)
         {
-            newCellTarget.y += 1;
-            hasMoved = true;
+            MoveUp();
         }
         else if(Keyboard.current.downArrowKey.wasPressedThisFrame)
         {
-            newCellTarget.y -= 1;
-            hasMoved = true;
+            MoveDown();
         }
-        else if (Keyboard.current.rightArrowKey.wasPressedThisFrame)
+        else if(Keyboard.current.rightArrowKey.wasPressedThisFrame)
         {
-            newCellTarget.x += 1;
-            hasMoved = true;
+            MoveRight();
         }
-        else if (Keyboard.current.leftArrowKey.wasPressedThisFrame)
+        else if(Keyboard.current.leftArrowKey.wasPressedThisFrame)
         {
-            newCellTarget.x -= 1;
-            hasMoved = true;
-        }
-
-        if(hasMoved)
-        {
-            //check if the new position is passable, then move there if it is.
-            BoardManager.CellData cellData = m_Board.GetCellData(newCellTarget);
-
-            if(cellData != null && cellData.Passable)
-            {
-                MoveTo(newCellTarget);
-                m_Board.Log();
-            }
+            MoveLeft();
         }
     }
 }

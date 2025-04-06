@@ -73,11 +73,11 @@ public class UnityMCPWindow : EditorWindow
 
                 switch (match.name)
                 {
-                    case "create_object_tool":
-                        await Result(client, CreateObjectTools.CreateObject(match.format));
+                    case "character_move_tool":
+                        await Result(client, CharacterMoveTools.Move(match.format));
                         break;
-                    case "editor_mode_tool":
-                        await Result(client, "ping");
+                    case "map_control_tool":
+                        await Result(client, MapInfoTools.Command(match.format));
                         break;
                 }
             }
@@ -96,7 +96,6 @@ public class UnityMCPWindow : EditorWindow
 
     private async Task Result(TcpClient client, string resultLog)
     {
-            Debug.LogError($"Send to {client.Client.RemoteEndPoint}");
         var stream = client.GetStream();
         var buffer = Encoding.UTF8.GetBytes(resultLog);
         await stream.WriteAsync(buffer, 0, buffer.Length);

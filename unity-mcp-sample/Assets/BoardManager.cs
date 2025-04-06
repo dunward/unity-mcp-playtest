@@ -29,6 +29,22 @@ public class BoardManager : MonoBehaviour
         m_Tilemap = GetComponentInChildren<Tilemap>();
         m_Grid = GetComponentInChildren<Grid>();
 
+        CreateBoard();
+        Player.Spawn(this, new Vector2Int(1, 1));
+    }
+
+    public string Reset()
+    {
+        m_Tilemap.ClearAllTiles();
+        m_BoardData = null;
+        CreateBoard();
+        Player.Spawn(this, new Vector2Int(1, 1));
+
+        return $"Reset complete.\nThis is new map information\n{Log()}";
+    }
+
+    private void CreateBoard()
+    {
         m_BoardData = new CellData[Width, Height];
 
         for (int y = 0; y < Height; ++y)
@@ -49,12 +65,7 @@ public class BoardManager : MonoBehaviour
                         !(x == 1 && y == 1) &&
                         !(x == Width - 2 && y == Height - 2))
                     {
-                        tile = WallTiles[Random.Range(0, WallTiles.Length)];
-                        m_BoardData[x, y].Passable = false;
-                    }
-                    else if (Random.Range(0, 100) < 10)
-                    {
-                        tile = BlockingTiles[Random.Range(0, BlockingTiles.Length)];
+                        tile = BlockingTiles[Random.Range(0, WallTiles.Length)];
                         m_BoardData[x, y].Passable = false;
                     }
                     else
@@ -69,8 +80,6 @@ public class BoardManager : MonoBehaviour
         }
 
         m_Tilemap.SetTile(new Vector3Int(Width - 2, Height - 2, 0), clearTile);
-
-        Player.Spawn(this, new Vector2Int(1, 1));
     }
 
     public Vector3 CellToWorld(Vector2Int cellIndex)
@@ -89,7 +98,7 @@ public class BoardManager : MonoBehaviour
         return m_BoardData[cellIndex.x, cellIndex.y];
     }
 
-    public void Log()
+    public string Log()
     {
         int[,] mapData = new int[Height, Width];
         
@@ -115,6 +124,7 @@ public class BoardManager : MonoBehaviour
             }
             mapString += "\n";
         }
-        Debug.Log(mapString);
+
+        return mapString;
     }
 }
